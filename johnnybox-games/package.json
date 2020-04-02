@@ -1,0 +1,39 @@
+{
+  "name": "johnnybox-games",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.32",
+    "@types/react": "^16.9.27",
+    "@types/react-dom": "^16.9.5",
+    "pixi.js": "^5.2.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-hot-loader": "^4.12.20",
+    "react-scripts": "3.4.1",
+    "typescript": "^3.7.5"
+  },
+  "scripts": {
+    "hot": "webpack-dev-server --mode development --hot --watch",
+    "watch": "webpack --mode development --watch"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

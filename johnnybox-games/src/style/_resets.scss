@@ -1,0 +1,15 @@
+@import './normalise.scss';
+@import './reset.scss';
+@import './typography.scss';
+
+html {
+    overflow: hidden;
+}
+body {
+    overflow: hidden;
+    position: fixed;
+}
+
+* {
+    box-sizing: border-box;
+}
