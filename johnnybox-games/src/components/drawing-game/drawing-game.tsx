@@ -5,7 +5,7 @@ import { SocketContext } from "../../index";
 export const DrawingGame = (): any => {
     const socket = useContext(SocketContext);
 
-    runGame(socket);
+    runGame();
 
     return null;
 }
@@ -26,7 +26,7 @@ const toggleFullScreen = () => {
     }
 }
 
-const runGame = (socket) => {
+const runGame = () => {
     let canvas = document.createElement("canvas");
     document.body.appendChild(canvas);
     canvas.width = window.innerWidth;

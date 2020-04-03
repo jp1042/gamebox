@@ -15,10 +15,10 @@ const roomData = () => {
     }
 }
 
-const initialAppContext = {
+export const initialAppContext = {
     roomCode: roomData().roomCode,
     clientType: roomData().clientType
-}
+};
 
 export const AppContextProvider = (props: any) => {
     const [appContextState, setAppContextState] = useState(initialAppContext);

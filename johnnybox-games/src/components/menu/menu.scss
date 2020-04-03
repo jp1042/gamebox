@@ -1,7 +1,34 @@
 .menu {
-    background: #7e0808;
-    height: 5rem;
+    background: #e06c00;
+    height: 4rem;
+    width: auto;
+    max-width: 30rem;
     display: flex;
+    margin: auto;
     align-items: center;
     color: white;
+    justify-content: space-around;
+    padding: 0 2rem;
+    border-radius: 0 0 2rem 2rem;
+
+    .room-code-wrapper {
+        display: flex;
+        align-items: center;
+        padding: .25rem;
+        margin-left: 1rem;
+        border-radius: .5rem;
+        min-width: 10rem;
+        justify-content: space-between;
+    }
+
+    .material-icons.close {
+        border: 1px solid white;
+        border-radius: .5rem;
+        transition: .5s ease;
+        cursor: pointer;
+
+        &:hover {
+            background: orange;
+        }
+    }
 }

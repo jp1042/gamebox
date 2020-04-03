@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
     console.log("connected");
 
-    socket.emit("rejoin");
+    // socket.emit("rejoin");
 
     socket.on('message', function (message) {
         //io.to(roomCode).emit("broadcastMessage", {text:message, username, id: new ObjectId()});
@@ -26,21 +26,25 @@ io.on('connection', function (socket) {
         //io.to(roomCode).emit("broadcastMessage", {text:message, username, id: new ObjectId()});
     });
 
-    socket.on('join', function (data) {
+    socket.on('join', function (data, onJoinCallback) {
         //Host
         if (data.selectedClientType === 1) {
+            let roomExists = !!io.sockets.adapter.rooms[data.inputRoomCode];
 
-            console.log(io.sockets.adapter.rooms[data.inputRoomCode])
+            !roomExists && socket.join(data.inputRoomCode);
 
-            socket.join(data.inputRoomCode);
-
-            socket.emit("joined", {
-                success: true,
+            return onJoinCallback({
+                success: !roomExists,
                 clientType: 1,
                 roomCode: data.inputRoomCode
-            })
+            });
         }
         //io.to(roomCode).emit("broadcastMessage", {text:message, username, id: new ObjectId()});
+    });
+
+    socket.on('leave', function (roomCode, leaveRoomCallback) {
+        socket.leave(roomCode);
+        return leaveRoomCallback();
     });
 });
 

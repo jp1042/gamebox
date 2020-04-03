@@ -49,6 +49,12 @@
             border-color: #f60;
             box-shadow: 0 5px 10px 0 rgba(0,0,0,.3);
         }
+
+        &.error {
+            // border: 2px solid #ef3e3e;
+            outline-color: #ef3e3e;
+            color: #ef3e3e;
+        }
     }
 
     input[type="text"] {
@@ -59,4 +65,10 @@
         text-align: center;
         color: rgb(170, 170, 170);
     }
+
+    .room-error-message {
+        padding: 1rem;
+        color: #ef3e3e;
+    }
+
 }
