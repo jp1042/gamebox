@@ -3,21 +3,28 @@ import { ClientType } from "../components/lobby/lobby";
 import { AppContext } from "..";
 
 const roomData = () => {
-    if (localStorage.getItem('roomCode') && localStorage.getItem('clientType')) {
+    const roomData = localStorage.getItem('roomData');
+
+    if (roomData) {
+        const { roomCode, username, clientType } = JSON.parse(roomData)
+
         return {
-            roomCode: localStorage.getItem("roomCode"),
-            clientType: parseInt(localStorage.getItem("clientType"))
+            roomCode,
+            username,
+            clientType: parseInt(clientType)
         }
     }
     return {
         roomCode: null,
+        username: null,
         clientType: ClientType.Unset
     }
 }
 
 export const initialAppContext = {
     roomCode: roomData().roomCode,
-    clientType: roomData().clientType
+    username: roomData().username,
+    clientType: roomData().clientType,
 };
 
 export const AppContextProvider = (props: any) => {

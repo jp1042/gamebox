@@ -8,10 +8,7 @@ import { initialAppContext } from './providers/appContextProvider';
 const socket = io.connect();
 
 if (initialAppContext.roomCode) {
-    socket.emit("join", {
-        selectedClientType: initialAppContext.clientType,
-        inputRoomCode: initialAppContext.roomCode
-    }, () => { });
+    socket.emit("rejoin", initialAppContext.roomCode);
 }
 
 export const SocketContext = React.createContext(socket);
