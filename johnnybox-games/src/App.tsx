@@ -7,6 +7,7 @@ import { Game } from './components/games/game/game';
 import { DrawingGame } from './components/drawing-game/drawing-game';
 import { Lobby } from './components/lobby/lobby';
 import { AppContextProvider } from './providers/appContextProvider';
+import { Room } from './components/room/room';
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
                 <div className="App">
                     <Menu />
                     <Lobby />
+                    <Room />
                     <DrawingGame />
                 </div>
             </SocketProvider>

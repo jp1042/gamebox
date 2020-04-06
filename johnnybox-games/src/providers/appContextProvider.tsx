@@ -25,6 +25,8 @@ export const initialAppContext = {
     roomCode: roomData().roomCode,
     username: roomData().username,
     clientType: roomData().clientType,
+    users: [],
+    userCount: 0
 };
 
 export const AppContextProvider = (props: any) => {

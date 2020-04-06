@@ -19,7 +19,8 @@ export enum ErrorType {
 //to do handle disconnect
 
 export const Lobby = () => {
-    const [{ roomCode, clientType }, setAppContextState] = useContext(AppContext);
+    const [appContextState, setAppContextState] = useContext(AppContext);
+    const { roomCode, clientType } = appContextState;
     const [roomUnavailableError, setRoomUnavailableError] = useState(false);
     const [usernameUnavailableError, setUsernameUnavailableError] = useState(false);
     const roomCodeInput = useRef(null);
@@ -33,10 +34,10 @@ export const Lobby = () => {
 
         if (validateFields(inputRoomCode, inputUsername)) {
             if (selectedClientType === ClientType.Host) {
-                socket.emit("create", inputRoomCode, inputUsername, createRoomCallback)
+                socket.emit("create", inputRoomCode.toUpperCase(), inputUsername, createRoomCallback)
             }
             if (selectedClientType === ClientType.Guest) {
-                socket.emit("join", inputRoomCode, inputUsername, joinRoomCallback)
+                socket.emit("join", inputRoomCode.toUpperCase(), inputUsername, joinRoomCallback)
             }
         }
     }
@@ -51,8 +52,20 @@ export const Lobby = () => {
 
     const createRoomCallback = (response) => {
         if (response.success) {
-            setAppContextState(response);
-            localStorage.setItem('roomData', JSON.stringify(response));
+            setAppContextState({
+                ...appContextState,
+                roomCode: response.roomCode,
+                username: response.username,
+                clientType: response.clientType,
+                users: [{ username: response.username }]
+            })
+            localStorage.setItem('roomData', JSON.stringify(
+                {
+                    roomCode: response.roomCode,
+                    username: response.username,
+                    clientType: response.clientType
+                }
+            ));
         } else {
             setRoomUnavailableError(true);
             roomCodeInput.current.focus();
@@ -61,8 +74,20 @@ export const Lobby = () => {
 
     const joinRoomCallback = (response) => {
         if (response.success) {
-            setAppContextState(response)
-            localStorage.setItem('roomData', JSON.stringify(response));
+            setAppContextState({
+                ...appContextState,
+                roomCode: response.roomCode,
+                username: response.username,
+                clientType: response.clientType,
+                users: response.users
+            });
+            localStorage.setItem('roomData', JSON.stringify(
+                {
+                    roomCode: response.roomCode,
+                    username: response.username,
+                    clientType: response.clientType
+                }
+            ));
         } else if (response.error === ErrorType.RoomDoesNotExist) {
             setRoomUnavailableError(true);
             roomCodeInput.current.focus();
@@ -91,7 +116,7 @@ export const Lobby = () => {
                 onChange={() => roomUnavailableError && setRoomUnavailableError(false)}
                 type="text"
                 placeholder="Enter room code"
-                className={`room-input ${roomUnavailableError ? 'error' : ''}`}
+                className={`room-input input ${roomUnavailableError ? 'error' : ''}`}
             />
             {usernameUnavailableError &&
                 <div className="room-error-message">
@@ -103,7 +128,7 @@ export const Lobby = () => {
                 onChange={() => usernameUnavailableError && setUsernameUnavailableError(false)}
                 type="text"
                 placeholder="Enter username"
-                className={`room-input ${roomUnavailableError ? 'error' : ''}`}
+                className={`input ${usernameUnavailableError ? 'error' : ''}`}
             />
             <button onClick={e => clickHandler(e, ClientType.Host)}>
                 Create room

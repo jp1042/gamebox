@@ -4,6 +4,7 @@ var app = express();
 var http = require('http').Server(app);
 const io = require('socket.io')(http);
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 
 const uri = "mongodb+srv://nhojrekrap:CLownfish23!@partyvibes-r4e8r.mongodb.net/";
 
@@ -35,8 +36,7 @@ MongoClient.connect(uri, { useNewUrlParser: true })
             });
 
             socket.on('join', async function (roomCode, username, onJoinCallback) {
-                const { success, error } = await joinRoom(roomCode, username, roomsDbCollection, socket, onJoinCallback);
-                success && socket.join(roomCode);
+                const { success, error, users } = await joinRoom(roomCode, username, roomsDbCollection, socket);
 
                 return onJoinCallback({
                     success,
@@ -44,11 +44,13 @@ MongoClient.connect(uri, { useNewUrlParser: true })
                     clientType: 2,
                     roomCode,
                     username,
+                    users,
                 });
             });
 
             socket.on('rejoin', function (roomCode) {
                 socket.join(roomCode);
+                updateRoom(roomCode, roomsDbCollection);
             });
 
             socket.on('leave', async function (roomCode, username, leaveRoomCallback) {
@@ -56,6 +58,11 @@ MongoClient.connect(uri, { useNewUrlParser: true })
                 success && socket.leave(roomCode);
 
                 return leaveRoomCallback();
+            });
+
+            socket.on('chat-message', function (roomCode, username, message) {
+                console.log(roomCode, username, message, "here");
+                io.to(roomCode).emit("chat-message", message, username, new ObjectId());
             });
         });
     });
@@ -78,7 +85,7 @@ function createRoom(roomCode, username, roomsDbCollection) {
     }
 }
 
-function joinRoom(roomCode, username, roomsDbCollection) {
+function joinRoom(roomCode, username, roomsDbCollection, socket) {
     let roomExists = !!io.sockets.adapter.rooms[roomCode];
 
     if (roomExists) {
@@ -88,8 +95,9 @@ function joinRoom(roomCode, username, roomsDbCollection) {
             { writeConcern: { w: 1 }, returnOriginal: false })
             .then(response => {
                 if (response.lastErrorObject.updatedExisting) {
+                    socket.join(roomCode);
                     io.to(roomCode).emit("roomUpdate", response.value);
-                    return { success: true, error: null } //Success
+                    return { success: true, error: null, users: response.value.users } //Success
                 }
                 else {
                     return { success: false, error: 1 } //UsernameExists
@@ -98,6 +106,19 @@ function joinRoom(roomCode, username, roomsDbCollection) {
             .catch(err => { return { success: false, error: 2 } }) //Error
     } else {
         return { success: false, error: 0 } //RoomDoesNotExist
+    }
+}
+
+function updateRoom(roomCode, roomsDbCollection) {
+    let roomExists = !!io.sockets.adapter.rooms[roomCode];
+    if (roomExists) {
+        roomsDbCollection.findOne(
+            { _id: roomCode })
+            .then(response => {
+                console.log("update room hit");
+                io.to(roomCode).emit("roomUpdate", response);
+            })
+            .catch(err => { }) //Error
     }
 }
 
@@ -112,7 +133,7 @@ function leaveRoom(roomCode, username, roomsDbCollection) {
             { writeConcern: { w: 1 }, returnOriginal: false })
             .then(response => {
                 if (response.lastErrorObject.updatedExisting) {
-                    io.to(roomCode).emit("leaveRoom", response.value);
+                    io.to(roomCode).emit("roomUpdate", response.value);
 
                     response.value
                         && response.value.userCount === 0

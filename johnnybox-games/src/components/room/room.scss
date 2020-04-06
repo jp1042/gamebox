@@ -1,0 +1,79 @@
+.users {
+    position: absolute;
+    left: -10rem;
+    top: 25%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    transition: 1s ease;
+
+    &.show {
+        left: 2rem;
+    }
+
+    h2 {
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        color: white;
+        background: #e06c00;
+        border-radius: .5rem;
+        padding: .25rem;
+    }
+
+    li {
+        width: 5rem;
+        height: 5rem;
+        font-size: 2rem;
+        border: 2px solid orangered;
+        border-radius: 50%;
+        background: teal;
+        color: white;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        transition: .5s ease;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.15);
+        margin-bottom: .5rem;
+
+        &:hover {
+            box-shadow: 0 5px 10px 0 rgba(0,0,0,.3);
+        }
+
+        &.me {
+            background: orange;
+        }
+    }
+}
+
+.bottom-navigation {
+    background: #e06c00;
+    height: 4rem;
+    position: fixed;
+    bottom:0;
+    left: 0;
+    right: 0;
+    width: auto;
+    max-width: 30rem;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    color: white;
+    justify-content: space-around;
+    padding: 0 2rem;
+    border-radius: 2rem 2rem 0 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.15);
+
+    .material-icons.style {
+        border-radius: .5rem;
+        transition: .5s ease;
+
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.15);
+        cursor: pointer;
+
+        &:hover,&:focus {
+            background: orange;
+            box-shadow: 0 5px 10px 0 rgba(0,0,0,.3);
+        }
+    }
+}
